@@ -1,0 +1,1 @@
+{"accuracy": 82.21, "intensity_mse": 849.48, "calories_mse": 789.57, "normalized_intensity_mse": 8.49, "normalized_calories_mse": 3.5, "test_size": 0.2, "test_samples": 163, "total_samples": 195}

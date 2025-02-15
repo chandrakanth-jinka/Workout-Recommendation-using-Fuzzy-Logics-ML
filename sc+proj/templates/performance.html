@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Performance Metrics{% endblock %}
+
+{% block content %}
+<div class="logo">
+    <i class="fas fa-chart-line"></i>
+</div>
+<h1>Performance Metrics</h1>
+
+<div class="performance-container">
+    <div class="metrics-grid" id="metrics-grid">
+        <div class="loading">Loading metrics...</div>
+    </div>
+</div>
+
+<script>
+    async function loadPerformanceData() {
+        const metricsGrid = document.getElementById('metrics-grid');
+
+        try {
+            const response = await fetch("{{ url_for('static', filename='data/performance_data.json') }}");
+            if (!response.ok) {
+                throw new Error('Failed to load performance data');
+            }
+            const metrics = await response.json();
+
+            const metricCards = [
+                {
+                    icon: 'bullseye',
+                    label: 'Model Accuracy',
+                    value: metrics.accuracy + '%'
+                },
+                {
+                    icon: 'fire',
+                    label: 'Intensity MSE',
+                    value: metrics.intensity_mse
+                },
+                {
+                    icon: 'burn',
+                    label: 'Calories MSE',
+                    value: metrics.calories_mse
+                },
+                {
+                    icon: 'percentage',
+                    label: 'Normalized Intensity MSE',
+                    value: metrics.normalized_intensity_mse + '%'
+                },
+                {
+                    icon: 'fire-alt',
+                    label: 'Normalized Calories MSE',
+                    value: metrics.normalized_calories_mse + '%'
+                },
+                {
+                    icon: 'database',
+                    label: 'Test Set Size',
+                    value: (metrics.test_size * 100) + '%'
+                }
+            ];
+
+            metricsGrid.innerHTML = metricCards.map(card => `
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-${card.icon}"></i>
+                    </div>
+                    <div class="metric-label">${card.label}</div>
+                    <div class="metric-value">${card.value}</div>
+                </div>
+            `).join('');
+
+        } catch (error) {
+            console.error('Error loading performance data:', error);
+            metricsGrid.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Error loading metrics. Please try again later.
+                </div>
+            `;
+        }
+    }
+
+    loadPerformanceData();
+</script>
+
+<style>
+    .loading {
+        text-align: center;
+        color: #ffffff;
+        font-size: 1.2rem;
+        padding: 2rem;
+    }
+
+    .error-message {
+        text-align: center;
+        color: #ff4444;
+        font-size: 1.2rem;
+        padding: 2rem;
+    }
+</style>
+{% endblock %}
