@@ -1,6 +1,6 @@
-# AI-Powered Workout Recommendation System
+# Workout Recommendation System
 
-An intelligent workout recommendation system that uses fuzzy logic to provide personalized exercise plans based on individual metrics like BMI, heart rate, and age.
+A workout recommendation system that uses fuzzy logic to provide personalized exercise plans based on individual metrics like BMI, heart rate, and age.
 
 ## 🌟 Features
 
