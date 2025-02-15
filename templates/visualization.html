@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}Visualization - Workout AI{% endblock %}
+
+{% block content %}
+<div class="logo">
+    <i class="fas fa-chart-bar"></i>
+</div>
+<h1>3D Interactive Visualizations</h1>
+
+<div class="visualization-main-container">
+    <h2>Fuzzy Logic Output Variables</h2>
+    <div class="grid-container">
+        <div class="output-box">
+            <h3>Workout Intensity</h3>
+            <div id="intensity-visualization" class="visualization-plot">
+                <div class="loading">Loading visualization...</div>
+            </div>
+        </div>
+        <div class="output-box">
+            <h3>Caloric Burn</h3>
+            <div id="calories-visualization" class="visualization-plot">
+                <div class="loading">Loading visualization...</div>
+            </div>
+        </div>
+        <div class="output-box centered">
+            <h3>Rest Period</h3>
+            <div id="rest-visualization" class="visualization-plot">
+                <div class="loading">Loading visualization...</div>
+            </div>
+        </div>
+    </div>
+
+    <h2>Workout Type Recommendations</h2>
+    <div class="grid-container">
+        <div class="output-box full-width">
+            <div id="workout-type-visualization" class="visualization-plot">
+                <div class="loading">Loading visualization...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<style>
+    .visualization-main-container {
+        max-width: 1800px;
+        margin: 2rem 0 2rem -300px;
+        padding: 2rem;
+        width: 90%;
+    }
+
+    .visualization-main-container h2 {
+        text-align: left;
+        margin: 3rem 0 2rem;
+        color: var(--text-color, #333);
+        font-size: 2.4rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        padding-left: 0rem;
+    }
+
+    [data-theme='dark'] .visualization-main-container h2 {
+        color: #ffffff;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+        margin-bottom: 4rem;
+    }
+
+    .output-box {
+        background: var(--box-bg, #f5f5f5);
+        border: 2px solid var(--border-color, #ddd);
+        border-radius: 12px;
+        padding: 2rem;
+        aspect-ratio: 1.3;
+        height: 500px;
+    }
+
+    [data-theme='dark'] .output-box {
+        background: #1a1a1a;
+        border-color: #333;
+    }
+
+    .grid-container:first-of-type .output-box:nth-child(1),
+    .grid-container:first-of-type .output-box:nth-child(2) {
+        grid-row: 1;
+    }
+
+    .grid-container:first-of-type .output-box:nth-child(3) {
+        grid-column: 1;
+        grid-row: 2;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+
+    .output-box.full-width {
+        grid-column: 1;
+        width: 100%;
+        margin: 0;
+    }
+
+    .visualization-plot {
+        width: 95%;
+        height: 95% !important;
+        position: relative;
+    }
+
+    .output-box h3 {
+        text-align: center;
+        margin-bottom: 0.5rem;
+        color: var(--text-color, #333);
+        font-size: 1.6rem;
+        font-weight: 500;
+        text-transform: capitalize;
+        letter-spacing: 0.5px;
+    }
+
+    [data-theme='dark'] .output-box h3 {
+        color: #ffffff;
+    }
+
+    .loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: var(--text-color, #333);
+        font-size: 1.2rem;
+        background: var(--loading-bg, rgba(255, 255, 255, 0.9));
+        padding: 1rem 2rem;
+        border-radius: 8px;
+    }
+
+    [data-theme='dark'] .loading {
+        color: #ffffff;
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .loading.error {
+        color: #ff4444;
+        text-align: center;
+        background: rgba(255, 0, 0, 0.1);
+        border: 1px solid #ff4444;
+    }
+
+    @media (max-width: 1200px) {
+        .visualization-main-container {
+            margin: 2rem auto;
+            padding: 1rem;
+            width: 95%;
+        }
+
+        .grid-container {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .output-box,
+        .output-box.full-width {
+            width: 100%;
+            height: 450px;
+        }
+
+        .visualization-main-container h2 {
+            font-size: 2rem;
+            margin: 2rem 0 1.5rem;
+            text-align: center;
+            padding-left: 0;
+        }
+    }
+</style>
+
+<script>
+    async function createVisualizations() {
+        const loadingElements = document.querySelectorAll('.loading');
+        loadingElements.forEach(el => el.style.display = 'block');
+
+        try {
+            const response = await fetch("{{ url_for('static', filename='data/visualization_data.json') }}");
+            if (!response.ok) {
+                throw new Error('Failed to load visualization data');
+            }
+            const data = await response.json();
+
+            // Create fuzzy logic visualizations
+            const createFuzzyPlot = (elementId, zData, title, colorscale = 'Viridis') => {
+                const plotData = {
+                    type: 'surface',
+                    x: data.bmi,
+                    y: data.heart_rate,
+                    z: zData,
+                    colorscale: colorscale,
+                    showscale: true,
+                    colorbar: {
+                        title: title,
+                        tickfont: { size: 12 }
+                    }
+                };
+
+                const layout = {
+                    scene: {
+                        xaxis: { title: 'BMI' },
+                        yaxis: { title: 'Heart Rate (BPM)' },
+                        zaxis: { title: title },
+                        camera: {
+                            eye: { x: 1.8, y: 1.8, z: 1.5 }
+                        }
+                    },
+                    template: getPlotlyTemplate(),
+                    margin: { l: 20, r: 20, t: 20, b: 20 },
+                    autosize: true
+                };
+
+                Plotly.newPlot(elementId, [plotData], layout);
+            };
+
+            // Create three separate plots for each output variable
+            createFuzzyPlot('intensity-visualization', data.intensity, 'Intensity (%)');
+            createFuzzyPlot('calories-visualization', data.calories, 'Caloric Burn (kcal)', 'Hot');
+            createFuzzyPlot('rest-visualization', data.rest, 'Rest Period (sec)', 'Cividis');
+
+            // Process workout types visualization
+            const workoutTypeData = {
+                type: 'surface',
+                x: data.bmi,
+                y: data.heart_rate,
+                z: data.workout_types,
+                colorscale: [
+                    [0, '#E0F7FA'],    // No workout
+                    [0.2, '#90CAF9'],  // Yoga
+                    [0.4, '#81C784'],  // Cardio
+                    [0.7, '#FFB74D'],  // Strength Training
+                    [1.0, '#F06292']   // HIIT
+                ],
+                showscale: true,
+                colorbar: {
+                    title: 'Workout Type',
+                    ticktext: ['Yoga', 'Cardio', 'Strength Training', 'HIIT'],
+                    tickvals: [1, 2, 3, 4],
+                    tickfont: { size: 12 }
+                }
+            };
+
+            const workoutTypeLayout = {
+                scene: {
+                    xaxis: { title: 'BMI' },
+                    yaxis: { title: 'Heart Rate (BPM)' },
+                    zaxis: {
+                        title: 'Workout Type',
+                        ticktext: ['', 'Yoga', 'Cardio', 'Strength', 'HIIT'],
+                        tickvals: [0, 1, 2, 3, 4]
+                    },
+                    camera: {
+                        eye: { x: 1.8, y: 1.8, z: 1.5 }
+                    }
+                },
+                template: getPlotlyTemplate(),
+                margin: { l: 0, r: 0, t: 0, b: 0 },
+                autosize: true,
+                height: undefined
+            };
+
+            Plotly.newPlot('workout-type-visualization', [workoutTypeData], workoutTypeLayout);
+
+            loadingElements.forEach(el => el.style.display = 'none');
+        } catch (error) {
+            console.error('Error loading visualization data:', error);
+            loadingElements.forEach(el => {
+                el.textContent = 'Error loading visualization. Please try again later.';
+                el.classList.add('error');
+            });
+        }
+    }
+
+    window.addEventListener('load', createVisualizations);
+
+    // Update Plotly layouts to use appropriate template based on theme
+    function getPlotlyTemplate() {
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        return isDarkMode ? 'plotly_dark' : 'plotly';
+    }
+</script>
+{% endblock %}

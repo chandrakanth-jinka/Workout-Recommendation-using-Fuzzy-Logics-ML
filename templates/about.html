@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}About - Workout AI{% endblock %}
+
+{% block content %}
+<div class="logo">
+    <i class="fas fa-info-circle"></i>
+</div>
+<h1>About Project</h1>
+
+<div class="about-container">
+    <section class="about-section">
+        <div class="section-header">
+            <i class="fas fa-project-diagram"></i>
+            <h2>Project Overview</h2>
+        </div>
+        <p>An AI-powered workout recommendation system using fuzzy logic to provide personalized exercise plans based on
+            individual metrics.</p>
+    </section>
+
+    <section class="about-section">
+        <div class="section-header">
+            <i class="fas fa-database"></i>
+            <h2>Dataset</h2>
+        </div>
+        <p>This project uses the Gym Members Exercise Dataset, which contains comprehensive workout data from various
+            gym members.</p>
+        <a href="https://www.kaggle.com/datasets/valakhorasani/gym-members-exercise-dataset" target="_blank"
+            class="dataset-link">
+            <i class="fas fa-external-link-alt"></i>
+            View Dataset on Kaggle
+        </a>
+    </section>
+
+    <section class="about-section">
+        <div class="section-header">
+            <i class="fas fa-code"></i>
+            <h2>Technologies Used</h2>
+        </div>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <i class="fab fa-python"></i>
+                <span>Python</span>
+            </div>
+            <div class="tech-item">
+                <i class="fas fa-server"></i>
+                <span>Flask</span>
+            </div>
+            <div class="tech-item">
+                <i class="fas fa-brain"></i>
+                <span>Scikit-fuzzy</span>
+            </div>
+            <div class="tech-item">
+                <i class="fas fa-robot"></i>
+                <span>Scikit-learn</span>
+            </div>
+            <div class="tech-item">
+                <i class="fas fa-table"></i>
+                <span>Pandas</span>
+            </div>
+            <div class="tech-item">
+                <i class="fas fa-calculator"></i>
+                <span>NumPy</span>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
