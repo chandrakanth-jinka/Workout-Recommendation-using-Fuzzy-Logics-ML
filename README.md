@@ -85,14 +85,6 @@ The system demonstrates robust performance with:
 - High accuracy in workout type recommendations
 - Low mean squared error in intensity predictions
 - Reliable caloric burn estimations
-![image](https://github.com/user-attachments/assets/4cae9211-9008-407a-94e4-0d8aa90ac39a)
-![image](https://github.com/user-attachments/assets/5d90681e-60ea-4529-a8a6-84c3c642e9f9)
-![image](https://github.com/user-attachments/assets/bea67123-0488-4c68-98b2-aa32a0c1cd95)
-![image](https://github.com/user-attachments/assets/d8f55882-e305-49ae-8f48-1f50ee4ee468)
-![image](https://github.com/user-attachments/assets/29d617e8-07ba-4730-8643-8e34d8ce7dea)
-
-
-
 
 
 ## 🙏 Acknowledgments
@@ -100,3 +92,14 @@ The system demonstrates robust performance with:
 - Dataset provided by [Kaggle](https://www.kaggle.com/datasets/valakhorasani/gym-members-exercise-dataset)
 - Inspired by modern fitness tracking systems
 - Built with the support of the open-source community
+
+
+![image](https://github.com/user-attachments/assets/4cae9211-9008-407a-94e4-0d8aa90ac39a)
+
+![image](https://github.com/user-attachments/assets/5d90681e-60ea-4529-a8a6-84c3c642e9f9)
+
+![image](https://github.com/user-attachments/assets/bea67123-0488-4c68-98b2-aa32a0c1cd95)
+
+![image](https://github.com/user-attachments/assets/d8f55882-e305-49ae-8f48-1f50ee4ee468)
+
+![image](https://github.com/user-attachments/assets/29d617e8-07ba-4730-8643-8e34d8ce7dea)
